@@ -2,7 +2,7 @@
 include("DBconnect.php");
 session_start();
 
-/* User must be logged in */
+/* user has to be logged in */
 if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");
     exit();
@@ -11,13 +11,13 @@ if (!isset($_SESSION['user_id'])) {
 $patient_id = $_SESSION['user_id'];
 $patient_name = $_SESSION['user_name'];
 
-/* Check if logged-in user is a PATIENT */
+/* checking if user is patient or not*/
 $check_patient = $conn->query(
     "SELECT * FROM Patient WHERE id = '$patient_id'"
 );
 
 if ($check_patient->num_rows == 0) {
-    // Not a patient → redirect to home
+    // user not patient then sent to home page
     header("Location: home.php");
     exit();
 }
@@ -25,7 +25,7 @@ if ($check_patient->num_rows == 0) {
 $message = "";
 $therapists = [];
 
-/* Step 1: Check availability */
+/* check if date availabe */
 if (isset($_POST['check'])) {
     $date = $_POST['date'];
 
@@ -46,7 +46,7 @@ if (isset($_POST['check'])) {
     }
 }
 
-/* Step 2: Book appointment */
+/* booking appointment here */
 if (isset($_POST['book'])) {
     $date = $_POST['date'];
     $time = $_POST['time'];
@@ -66,7 +66,7 @@ if (isset($_POST['book'])) {
 		$message = "<p class='success'>
 			Appointment booked successfully!<br>
 			Status: Pending<br>
-			Redirecting to dashboard... </p>";
+			Redirecting to dashboard </p>";
     header("refresh:2;url=patient_dashboard.php");
 	}
 
