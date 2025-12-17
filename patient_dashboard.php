@@ -21,10 +21,10 @@ if (!isset($_SESSION['user_id'])) {
 
         <a href="appointment.php">Book Appointment</a>
         <a href="#">Appointment History</a>
-        <a href="#">Personal Details</a>
+        <a href="patient_personal.php">Personal Details</a>
         <a href="#">Self Assessment Test</a>
-        <a href="#">Progress Report</a>
-        <a href="#">Feedback</a>
+        <a href="patient_progress.php">Progress Report</a>
+        <a href="patient_feedback.php">Feedback</a>
 
         <hr style="margin:20px 0; border-color:#ffffff55;">
 
