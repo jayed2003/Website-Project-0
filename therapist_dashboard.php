@@ -20,8 +20,11 @@ if (!isset($_SESSION['user_id'])) {
         <h2>Therapist Panel</h2>
 
         <a href="#">Profile</a>
+        <a href="therapist_personal.php">Personal Details</a>
         <a href="#">Today's Appointments</a>
         <a href="#">Emergency Service Request</a>
+        <a href="therapist_progress.php">Patient Progress Reports</a>
+        <a href="therapist_feedback_view.php">View Feedbacks</a>
 
         <hr style="margin:20px 0; border-color:#ffffff55;">
 
