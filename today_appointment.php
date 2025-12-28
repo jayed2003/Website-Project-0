@@ -162,10 +162,12 @@ $todayAppointments = $today_stmt->get_result();
     <!-- SIDEBAR -->
     <div class="sidebar">
         <h2>Therapist Panel</h2>
-        <a href="therapist_dashboard.php" class="active">Dashboard</a>
+        <a href="#">Profile</a>
+        <a href="therapist_personal.php">Personal Details</a>
         <a href="today_appointment.php">Today's Appointments</a>
-        <a href="profile.php">Profile</a>
-        <a href="logout.php">Logout</a>
+        <a href="#">Emergency Service Request</a>
+        <a href="therapist_progress.php">Patient Progress Reports</a>
+        <a href="therapist_feedback_view.php">View Feedbacks</a>
     </div>
 
     <!-- CONTENT -->
