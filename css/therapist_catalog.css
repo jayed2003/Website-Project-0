@@ -1,0 +1,153 @@
+/* Page Container */
+.page-container {
+    width: 90%;
+    max-width: 1300px;
+    margin: 120px auto 60px;
+    font-family: "Segoe UI", sans-serif;
+}
+body {
+    background: linear-gradient(to bottom, #4fb9af 0%, #b3e0dc 40%);
+}
+/* Title */
+.page-title {
+    text-align: center;
+    font-size: 32px;
+    font-weight: bold;
+    margin-bottom: 12px;
+}
+
+/* Top Appointment Button */
+.top-book-btn {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.book-btn {
+    background-color: #009688;
+    padding: 12px 26px;
+    color: #fff;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: 0.2s;
+}
+
+.book-btn:hover {
+    background-color: #007a6e;
+}
+
+/* Responsive Therapist Card Grid */
+.therapist-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 22px;
+    justify-content: center;
+}
+
+/* Card Styling */
+.therapist-card {
+    width: 300px;
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.1);
+    padding: 14px;
+    text-align: center;
+    transition: transform 0.3s ease;
+}
+
+.therapist-card:hover {
+    transform: translateY(-6px);
+}
+
+/* Therapist Image */
+.therapist-card img {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+    border-radius: 8px;
+    background: #eaeaea;
+}
+
+/* Therapist Information */
+.therapist-info {
+    margin-top: 12px;
+    text-align: left;
+}
+
+.therapist-info h3 {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 6px;
+}
+
+.therapist-info p {
+    margin: 4px 0;
+    font-size: 15px;
+    color: #444;
+}
+
+/* Rating Stars */
+.rating-stars {
+    color: #FFA500;
+    margin-right: 5px;
+}
+
+/* Prevent footer overlap */
+.footer-space {
+    height: 40px;
+}
+
+/* HEADER FIX */
+.navbar {
+    width: 100%;
+    padding: 12px 0;
+    position: sticky;
+    top: 0;
+    background: #ffffff;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.08);
+    z-index: 999;
+}
+
+.navbar .container {
+    width: 90%;
+    margin: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+}
+
+.logo {
+    height: 50px;
+    margin-right: 10px;
+}
+
+.brand-name {
+    font-size: 23px;
+    font-weight: 700;
+    color: #009688;
+}
+
+.nav-menu {
+    display: flex;
+    gap: 25px;
+    list-style: none;
+}
+
+.nav-menu a {
+    color: #111;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 15px;
+}
+
+.nav-menu a:hover,
+.nav-menu .profile {
+    color: #009688;
+    font-weight: 600;
+}
