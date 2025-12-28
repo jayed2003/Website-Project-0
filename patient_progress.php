@@ -36,35 +36,25 @@ if ($result->num_rows == 0) {
 <body>
 
 <div class="wrapper">
- <div class="sidebar">
-        <h2>Patient Panel</h2>
-        <a href="appointment.php">Book Appointment</a>
-        <a href="#">Appointment History</a>
-        <a href="patient_personal.php">Personal Details</a>
-        <a href="#">Self Assessment Test</a>
-        <a href="#">Progress Report</a>
-        <a href="patient_feedback.php">Feedback</a>
-        <hr style="margin:20px 0; border-color:#ffffff55;">
-        <a href="logout.php">Logout</a>
-    </div>
+	<?php include("patient_sidebar.php"); ?>
 
-<div class="content">
-    <h1>Your Progress Reports</h1>
+	<div class="content">
+		<h1>Your Progress Reports</h1>
 
-    <?php if(isset($no_reports)) { ?>
-        <p style="font-style:italic; color:#555; margin-top:20px;"><?= $no_reports; ?></p>
-    <?php } else { ?>
+		<?php if(isset($no_reports)) { ?>
+			<p style="font-style:italic; color:#555; margin-top:20px;"><?= $no_reports; ?></p>
+		<?php } else { ?>
 
-        <?php while($row = $result->fetch_assoc()) { ?>
-            <div class="report-card">
-                <p><strong>Date:</strong> <?= date("d M Y", strtotime($row['date'])); ?></p>
-                <p><strong>Improvement Score:</strong> <?= $row['improvement_score']; ?>/10</p>
-                <p><strong>Severity:</strong> <?= htmlspecialchars($row['severity']); ?></p>
-                <p><strong>Summary:</strong><br><?= nl2br(htmlspecialchars($row['summary'])); ?></p>
-            </div>
-        <?php } ?>
+			<?php while($row = $result->fetch_assoc()) { ?>
+				<div class="report-card">
+					<p><strong>Date:</strong> <?= date("d M Y", strtotime($row['date'])); ?></p>
+					<p><strong>Improvement Score:</strong> <?= $row['improvement_score']; ?>/10</p>
+					<p><strong>Severity:</strong> <?= htmlspecialchars($row['severity']); ?></p>
+					<p><strong>Summary:</strong><br><?= nl2br(htmlspecialchars($row['summary'])); ?></p>
+				</div>
+			<?php } ?>
 
-    <?php } ?>
+		<?php } ?>
 </div>
 
 <style>

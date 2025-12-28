@@ -40,7 +40,11 @@ if (isset($_POST['login'])) {
         <span>PsychHelp</span>
     </div>
 </div>
-
+<?php
+if (isset($_GET['reset']) && $_GET['reset'] == 'success') {
+    echo "<div class='success'>✔ Password Updated! Please Login.</div>";
+}
+?>
 <!-- Login Form -->
 <div class="container">
     <h2>User Login</h2>
@@ -56,6 +60,11 @@ if (isset($_POST['login'])) {
 
         <button type="submit" name="login">Login</button>
     </form>
+	<div style="text-align:center; margin-top:10px;">
+		<a href="forgot_password.php" style="color:#159c8c; font-size:14px; text-decoration:none;">
+			Forgot Password?
+		</a>
+	</div>
 
     <p style="text-align:center; margin-top:15px;">
         Don’t have an account?

@@ -65,17 +65,7 @@ if ($result->num_rows == 0) {
 </head>
 <body>
 <div class="wrapper">
- <div class="sidebar">
-        <h2>Patient Panel</h2>
-        <a href="appointment.php">Book Appointment</a>
-        <a href="#">Appointment History</a>
-        <a href="patient_personal.php">Personal Details</a>
-        <a href="#">Self Assessment Test</a>
-        <a href="patient_progress.php">Progress Report</a>
-        <a href="patient_feedback.php">Feedback</a>
-        <hr style="margin:20px 0; border-color:#ffffff55;">
-        <a href="logout.php">Logout</a>
-    </div>
+	<?php include("patient_sidebar.php"); ?>
 
 
     <div class="content">

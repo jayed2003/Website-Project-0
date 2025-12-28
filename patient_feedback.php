@@ -24,9 +24,9 @@ $stmt->bind_param("i", $patient_id);
 $stmt->execute();
 $result = $stmt->get_result();
 
-if($result->num_rows == 0){
-    echo "No therapists found for this patient.";
-    exit();
+$noDataMessage = "";
+if (mysqli_num_rows($result) == 0) {
+    $noDataMessage = "You haven’t booked any appointments yet.";
 }
 
 /* Handle feedback submission */
@@ -79,26 +79,20 @@ $current_page = basename($_SERVER['PHP_SELF']); // gets current file name
 
 <body>
 <div class="wrapper">
-    <div class="sidebar">
-        <h2>Patient Panel</h2>
-        <a href="appointment.php">Book Appointment</a>
-        <a href="#">Appointment History</a>
-        <a href="patient_personal.php">Personal Details</a>
-        <a href="#">Self Assessment Test</a>
-        <a href="patient_progress.php">Progress Report</a>
-        <a href="patient_feedback.php">Feedback</a>
-        <hr style="margin:20px 0; border-color:#ffffff55;">
-        <a href="logout.php">Logout</a>
-    </div>
+    <?php include("patient_sidebar.php"); ?>
 
-    <div class="content">
+    <div class="content-card">
         <h1>Therapist Feedback</h1>
 
         <div class="feedback-box">
 
             <?php if ($success) echo "<p style='color:green;'>$success</p>"; ?>
             <?php if ($error) echo "<p style='color:red;'>$error</p>"; ?>
-
+			<?php if (!empty($noDataMessage)): ?>
+				<p style="color:#b30000; font-weight:bold; margin-bottom:10px;">
+					<?= $noDataMessage ?>
+				</p>
+			<?php endif; ?>
             <form method="POST">
                 <label>Select Therapist</label>
                 <select name="therapist_id" required onchange="setTherapistName(this)">
@@ -118,12 +112,12 @@ $current_page = basename($_SERVER['PHP_SELF']); // gets current file name
 
                 <label>Rating (1–5)</label>
                 <input type="number" name="rating" min="1" max="5">
-
-                <button type="submit">Submit Feedback</button>
+				
+				<button type="submit" class="btn-primary">Submit Feedback</button>
             </form>
 
         </div>
-    </div>
+    <div>
 </div>
 
 <script>

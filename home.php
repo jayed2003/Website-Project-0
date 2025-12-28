@@ -1,70 +1,72 @@
-<?php
-session_start();
-?>
-
+<?php session_start(); ?>
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>PsychHelp - Home</title>
+    <meta charset="UTF-8">
+    <title>Home | PsychHelp</title>
     <link rel="stylesheet" href="css/home.css">
 </head>
 <body>
 
-<!-- HEADER -->
-<header>
-    <div class="logo">
-        <img src="images/logo.png" alt="Logo">
-        <span>PsychHelp</span>
+<header class="top-header animate-fade">
+    <div class="left-nav">
+        <a href="home.php" class="logo">
+            <img src="images/logo.png" alt="PsychHelp">
+            <span>PsychHelp</span>
+        </a>
     </div>
 
-    <nav>
-		<ul>
-			<li><a href="#">Home</a></li>
-			<li><a href="#">About</a></li>
-			<li><a href="#">Therapist</a></li>
-			<li><a href="#">Blog</a></li>
-			<li><a href="#">Contact</a></li>
-			<li><a href="profile_redirect.php"><b>My Profile</b></a></li>
-		</ul>
-	</nav>
+    <nav class="nav-menu">
+        <a href="home.php">Home</a>
+        <a href="about.php">About Us</a>
+        <a href="blog.php">Blog</a>
+        <a href="therapist_catalog.php">Therapist</a>
+        <a href="contact.php">Contact</a>
+    </nav>
 
+    <div class="right-nav">
+        <a href="profile_redirect.php" class="profile-btn">My Profile</a>
+    </div>
 </header>
 
-<!-- HERO -->
-<section class="hero">
+
+<section class="hero-section animate-up">
     <div class="hero-content">
-        <h1>Complete Healthcare Solution</h1>
+        <h1>Your Wellness Matters 💚</h1>
         <p>
-            We provide professional mental healthcare services with trusted
-            therapists to support your well-being and personal growth.
+            Connect with trusted mental health professionals and begin a happier
+            journey — anytime, anywhere.
         </p>
-        <a href="">Learn More</a>
+        <a href="appointment.php" class="btn-start">Start Your Healing</a>
     </div>
 </section>
 
+
 <!-- FOOTER -->
-<footer>
+<footer class="footer-area animate-fade">
     <div class="footer-container">
 
-        <div class="footer-box">
+        <div class="footer-column">
             <h3>PsychHelp</h3>
-            <p>Email: support@PsychHelp.com</p>
-            <p>Phone: +880 1234 567890</p>
+            <p>📧 Email: support@psychhelp.com</p>
+            <p>📞 Phone: +880 1234 567890</p>
+			<p><a href="https://facebook.com" target="_blank">👍 Facebook</a></p>
+            <p><a href="https://instagram.com" target="_blank">📸 Instagram</a></p>
+            <p><a href="https://wa.me/8801234567890" target="_blank">💬 WhatsApp: +880 1234 567890</a></p>
         </div>
 
-        <div class="footer-box">
+        <div class="footer-column">
             <h3>Quick Links</h3>
-            <a href="#">About</a>
-            <a href="#">Therapist</a>
-            <a href="#">Blog</a>
-            <a href="#">Contact</a>
+            <a href="about.php">About Us</a>
+            <a href="therapist_catalog.php">Therapist</a>
+            <a href="blog.php">Blog</a>
+            <a href="contact.php">Contact</a>
         </div>
 
-        <div class="footer-box">
+        <div class="footer-column">
             <h3>Services</h3>
-            <a href="#">Mental Health Support</a>
-            <a href="#">Online Therapy</a>
-            <a href="#">Emergency Help</a>
+            <a href="self_assessment.php">Self Assesment Test</a>
+            <a href="patient_emergency_request">Emergency Help</a>
         </div>
 
     </div>

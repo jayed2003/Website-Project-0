@@ -51,20 +51,8 @@ if ($result->num_rows == 0) {
 <body>
 <div class="wrapper">
 
-    <div class="sidebar">
-        <h2>Therapist Panel</h2>
 
-        <a href="#">Profile</a>
-        <a href="therapist_personal.php">Personal Details</a>
-        <a href="#">Today's Appointments</a>
-        <a href="#">Emergency Service Request</a>
-        <a href="therapist_progress.php">Patient Progress Reports</a>
-        <a href="therapist_feedback_view.php">View Feedbacks</a>
-
-        <hr style="margin:20px 0; border-color:#ffffff55;">
-
-        <a href="logout.php">Logout</a>
-    </div>
+    <?php include("therapist_sidebar.php"); ?>
 
     <div class="content">
         <h1>Anonymous Feedback Received</h1>
