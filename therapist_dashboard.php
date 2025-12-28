@@ -21,7 +21,7 @@ if (!isset($_SESSION['user_id'])) {
 
         <a href="#">Profile</a>
         <a href="therapist_personal.php">Personal Details</a>
-        <a href="#">Today's Appointments</a>
+        <a href="today_appointment.php">Today's Appointments</a>
         <a href="#">Emergency Service Request</a>
         <a href="therapist_progress.php">Patient Progress Reports</a>
         <a href="therapist_feedback_view.php">View Feedbacks</a>
