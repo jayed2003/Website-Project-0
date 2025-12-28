@@ -2,7 +2,6 @@
 include("DBconnect.php");
 session_start();
 
-/* patient must be logged in */
 if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");
     exit();
@@ -12,7 +11,6 @@ $patient_id = $_SESSION['user_id'];
 $success = "";
 $error = "";
 
-/* Fetch therapists for this patient */
 $sql = "
     SELECT DISTINCT a.therapist_id, u.name AS therapist_name
     FROM appointment a
@@ -29,7 +27,6 @@ if($result->num_rows == 0){
     exit();
 }
 
-/* Handle feedback submission */
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $therapist_id   = $_POST['therapist_id'];
     $therapist_name = $_POST['therapist_name'];
@@ -65,7 +62,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     }
 }
 
-$current_page = basename($_SERVER['PHP_SELF']); // gets current file name
+$current_page = basename($_SERVER['PHP_SELF']); 
 
 
 ?>
