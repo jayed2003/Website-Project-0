@@ -2,6 +2,7 @@
 include("DBconnect.php");
 session_start();
 
+/* patient must be logged in */
 if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");
     exit();
@@ -11,6 +12,7 @@ $patient_id = $_SESSION['user_id'];
 $success = "";
 $error = "";
 
+/* Fetch therapists for this patient */
 $sql = "
     SELECT DISTINCT a.therapist_id, u.name AS therapist_name
     FROM appointment a
@@ -22,11 +24,12 @@ $stmt->bind_param("i", $patient_id);
 $stmt->execute();
 $result = $stmt->get_result();
 
-if($result->num_rows == 0){
-    echo "No therapists found for this patient.";
-    exit();
+$noDataMessage = "";
+if (mysqli_num_rows($result) == 0) {
+    $noDataMessage = "You haven’t booked any appointments yet.";
 }
 
+/* Handle feedback submission */
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $therapist_id   = $_POST['therapist_id'];
     $therapist_name = $_POST['therapist_name'];
@@ -62,7 +65,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     }
 }
 
-$current_page = basename($_SERVER['PHP_SELF']); 
+$current_page = basename($_SERVER['PHP_SELF']); // gets current file name
 
 
 ?>
@@ -76,26 +79,20 @@ $current_page = basename($_SERVER['PHP_SELF']);
 
 <body>
 <div class="wrapper">
-    <div class="sidebar">
-        <h2>Patient Panel</h2>
-        <a href="appointment.php">Book Appointment</a>
-        <a href="#">Appointment History</a>
-        <a href="patient_personal.php">Personal Details</a>
-        <a href="#">Self Assessment Test</a>
-        <a href="patient_progress.php">Progress Report</a>
-        <a href="patient_feedback.php">Feedback</a>
-        <hr style="margin:20px 0; border-color:#ffffff55;">
-        <a href="logout.php">Logout</a>
-    </div>
+    <?php include("patient_sidebar.php"); ?>
 
-    <div class="content">
+    <div class="content-card">
         <h1>Therapist Feedback</h1>
 
         <div class="feedback-box">
 
             <?php if ($success) echo "<p style='color:green;'>$success</p>"; ?>
             <?php if ($error) echo "<p style='color:red;'>$error</p>"; ?>
-
+			<?php if (!empty($noDataMessage)): ?>
+				<p style="color:#b30000; font-weight:bold; margin-bottom:10px;">
+					<?= $noDataMessage ?>
+				</p>
+			<?php endif; ?>
             <form method="POST">
                 <label>Select Therapist</label>
                 <select name="therapist_id" required onchange="setTherapistName(this)">
@@ -115,12 +112,12 @@ $current_page = basename($_SERVER['PHP_SELF']);
 
                 <label>Rating (1–5)</label>
                 <input type="number" name="rating" min="1" max="5">
-
-                <button type="submit">Submit Feedback</button>
+				
+				<button type="submit" class="btn-primary">Submit Feedback</button>
             </form>
 
         </div>
-    </div>
+    <div>
 </div>
 
 <script>

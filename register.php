@@ -16,10 +16,8 @@ if (isset($_POST['register'])) {
     $role     = $_POST['role']; // Patient or Therapist
 
     // Insert into User table
-    $sql_user = "INSERT INTO User 
-        (name, email, password, phone, gender, street, city, zipcode)
-        VALUES 
-        ('$name', '$email', '$password', '$phone', '$gender', '$street', '$city', '$zipcode')";
+    $sql_user = "INSERT INTO user (name, email, password, phone, gender, date_time, street, city, zipcode)
+            VALUES ('$name', '$email', '$password', '$phone', '$gender', CURDATE(), '$street', '$city', '$zipcode')";
 
     if ($conn->query($sql_user)) {
 

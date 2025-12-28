@@ -12,12 +12,12 @@ $therapist_name = htmlspecialchars($_SESSION['user_name'] ?? 'Therapist');
 $today = date("Y-m-d");
 
 /* =========================
-   ACCEPT APPOINTMENT LOGIC 
+   ACCEPT APPOINTMENT LOGIC - FIXED SECURITY ISSUE
 ========================= */
 if (isset($_POST['accept']) && isset($_POST['appointment_id'])) {
-    $appointment_id = intval($_POST['appointment_id']); 
+    $appointment_id = intval($_POST['appointment_id']); // Security fix
     
-    
+    // Use prepared statement to prevent SQL injection
     $stmt = $conn->prepare("UPDATE appointment 
                            SET status='Approved'
                            WHERE appointment_id=? 
@@ -26,11 +26,14 @@ if (isset($_POST['accept']) && isset($_POST['appointment_id'])) {
     $stmt->execute();
     $stmt->close();
     
-    
+    // Refresh page to show updated status
     header("Location: " . $_SERVER['PHP_SELF']);
     exit();
 }
 
+/* =========================
+   FETCH DATA WITH PREPARED STATEMENTS
+========================= */
 
 // All appointments with prepared statement
 $all_stmt = $conn->prepare("
@@ -157,15 +160,7 @@ $todayAppointments = $today_stmt->get_result();
 <div class="wrapper">
 
     <!-- SIDEBAR -->
-    <div class="sidebar">
-        <h2>Therapist Panel</h2>
-        <a href="#">Profile</a>
-        <a href="therapist_personal.php">Personal Details</a>
-        <a href="today_appointment.php">Today's Appointments</a>
-        <a href="#">Emergency Service Request</a>
-        <a href="therapist_progress.php">Patient Progress Reports</a>
-        <a href="therapist_feedback_view.php">View Feedbacks</a>
-    </div>
+    <?php include("therapist_sidebar.php"); ?>
 
     <!-- CONTENT -->
     <div class="content">

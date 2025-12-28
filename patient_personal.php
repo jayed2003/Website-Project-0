@@ -2,6 +2,7 @@
 include("DBconnect.php");
 session_start();
 
+/* Patient must be logged in */
 if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");
     exit();
@@ -9,6 +10,7 @@ if (!isset($_SESSION['user_id'])) {
 
 $patient_id = $_SESSION['user_id'];
 
+/* Fetch patient details from `user` table */
 $stmt = $conn->prepare("SELECT name, email, phone, gender, street, city, zipcode, date_time FROM user WHERE id = ?");
 $stmt->bind_param("i", $patient_id);
 $stmt->execute();
@@ -63,17 +65,7 @@ if ($result->num_rows == 0) {
 </head>
 <body>
 <div class="wrapper">
- <div class="sidebar">
-        <h2>Patient Panel</h2>
-        <a href="appointment.php">Book Appointment</a>
-        <a href="#">Appointment History</a>
-        <a href="patient_personal.php">Personal Details</a>
-        <a href="#">Self Assessment Test</a>
-        <a href="patient_progress.php">Progress Report</a>
-        <a href="patient_feedback.php">Feedback</a>
-        <hr style="margin:20px 0; border-color:#ffffff55;">
-        <a href="logout.php">Logout</a>
-    </div>
+	<?php include("patient_sidebar.php"); ?>
 
 
     <div class="content">

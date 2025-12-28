@@ -1,142 +1,194 @@
 <?php
-include("DBconnect.php");
 session_start();
+include("DBconnect.php");
 
-/* user has to be logged in */
 if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");
     exit();
 }
 
-$patient_id = $_SESSION['user_id'];
-$patient_name = $_SESSION['user_name'];
-
-/* checking if user is patient or not*/
-$check_patient = $conn->query(
-    "SELECT * FROM Patient WHERE id = '$patient_id'"
-);
-
-if ($check_patient->num_rows == 0) {
-    // user not patient then sent to home page
-    header("Location: home.php");
-    exit();
-}
-
 $message = "";
-$therapists = [];
+$user_id = $_SESSION['user_id'];
 
-/* check if date availabe */
-if (isset($_POST['check'])) {
-    $date = $_POST['date'];
-
-    $sql = "
-        SELECT t.therapist_id, u.name
-        FROM Therapist t
-        JOIN User u ON t.therapist_id = u.id
-        WHERE t.therapist_id NOT IN (
-            SELECT therapist_id
-            FROM Appointment
-            WHERE date = '$date'
-        )
-    ";
-
-    $result = $conn->query($sql);
-    while ($row = $result->fetch_assoc()) {
-        $therapists[] = $row;
-    }
+// TIME OPTIONS 9 AM - 5 PM
+$timeOptions = "";
+$start = strtotime("09:00");
+$end = strtotime("17:00");
+while ($start <= $end) {
+    $value = date("H:i", $start);
+    $label = date("h:i A", $start);
+    $timeOptions .= "<option value='$value'>$label</option>";
+    $start = strtotime("+1 hour", $start);
 }
 
-/* booking appointment here */
-if (isset($_POST['book'])) {
-    $date = $_POST['date'];
-    $time = $_POST['time'];
-    $therapist_id = $_POST['therapist_id'];
+// Get selected date + time (if chosen)
+$date = isset($_POST['date']) ? $_POST['date'] : null;
+$time = isset($_POST['time']) ? $_POST['time'] : null;
 
-    $tname_query = $conn->query(
-        "SELECT name FROM User WHERE id = '$therapist_id'"
+// Trigger showing therapists only if both chosen
+$showTherapists = ($date && $time);
+
+// Handle final booking
+if (isset($_POST['therapist'])) {
+
+    $therapist_id = $_POST['therapist'];
+
+    // Fetch user name
+    $uQuery = mysqli_query($conn, "SELECT name FROM user WHERE id='$user_id'");
+    $uRow = mysqli_fetch_assoc($uQuery);
+    $patient_name = $uRow['name'];
+
+    // Fetch therapist name
+    $tQuery = mysqli_query($conn, "SELECT name FROM user WHERE id='$therapist_id'");
+    $tRow = mysqli_fetch_assoc($tQuery);
+    $therapist_name = $tRow['name'];
+
+    // Check if slot already booked
+    $check = mysqli_query($conn, 
+        "SELECT * FROM appointment 
+         WHERE date='$date' 
+         AND time='$time' 
+         AND therapist_id='$therapist_id'"
     );
-    $therapist_name = $tname_query->fetch_assoc()['name'];
 
-    $sql = "INSERT INTO Appointment 
-            (date, time, status, patient_name, therapist_name, patient_id, therapist_id)
-            VALUES
-            ('$date', '$time', 'Pending', '$patient_name', '$therapist_name', '$patient_id', '$therapist_id')";
-
-    if ($conn->query($sql)) {
-		$message = "<p class='success'>
-			Appointment booked successfully!<br>
-			Status: Pending<br>
-			Redirecting to dashboard </p>";
-    header("refresh:2;url=patient_dashboard.php");
-	}
-
+    if (mysqli_num_rows($check) > 0) {
+        $message = "⚠ Selected therapist is already booked at this time!";
+    } 
     else {
-        $message = "<p class='error'>".$conn->error."</p>";
+        mysqli_query($conn,
+            "INSERT INTO appointment 
+             (patient_id, patient_name, therapist_id, therapist_name, date, time, status) 
+             VALUES ('$user_id', '$patient_name', '$therapist_id', '$therapist_name', '$date', '$time', 'Pending')"
+        );
+
+        $message = "✔ Appointment Successfully Booked!";
     }
 }
 ?>
 
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Book Appointment</title>
-    <link rel="stylesheet" href="css/register.css">
-</head>
-<body>
 
-<!-- Header -->
-<div class="header">
-    <div class="logo">
-        <a href="home.php" style="display:flex; align-items:center; gap:12px; text-decoration:none;">
-            <img src="images/logo.png" alt="Logo">
-            <span>PsychHelp</span>
-        </a>
-    </div>
-</div>
+<link rel="stylesheet" href="css/dashboard.css">
 
-<!-- Appointment Card -->
-<div class="container">
-    <h2>Book Appointment</h2>
+<style>
+/* Gradient Background */
+.main-content {
+    background: white;
+    min-height: 100vh;
+    padding-top: 40px;
+}
 
-    <p style="text-align:center; margin-bottom:15px;">
-        Logged in as <b><?php echo $patient_name; ?></b>
-    </p>
+/* Card */
+.appointment-container {
+    background: linear-gradient(to bottom right, #4fb9af 0%, #b3e0dc 100%);
+    padding: 30px;
+    border-radius: 12px;
+    width: 75%;
+    margin: 0 auto 40px auto;
+    box-shadow: 0px 4px 10px rgba(0,0,0,0.12);
+}
 
-    <?php echo $message; ?>
+/* Input fields */
+.form-input {
+    padding: 12px;
+    width: 100%;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+    margin-bottom: 18px;
+}
 
-    <!-- Select Date -->
-    <form method="POST">
-        <label>Select Date</label>
-        <input type="date" name="date" required>
-        <button type="submit" name="check">Check Availability</button>
-    </form>
+.btn-submit {
+    background: #0e8578;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+}
+.btn-submit:hover {
+    background: #0c6e63;
+}
 
-    <br>
+/* Alerts */
+.alert-box {
+    background: #e0f7f5;
+    border-left: 6px solid #0e8578;
+    padding: 10px;
+    font-size: 16px;
+    margin-bottom: 20px;
+    border-radius: 6px;
+}
+</style>
 
-    <!-- Show therapists -->
-    <?php if (!empty($therapists)) { ?>
+<div class="wrapper">
+<?php include("patient_sidebar.php"); ?>
+
+<div class="main-content">
+
+    <div class="appointment-container">
+        <h2>📅 Book Appointment</h2>
+
+        <?php if ($message) echo "<p class='alert-box'>$message</p>"; ?>
+
         <form method="POST">
-            <input type="hidden" name="date" value="<?php echo $_POST['date']; ?>">
 
-            <label>Select Time</label>
-            <input type="time" name="time" required>
+            <!-- Disable Fridays & Sundays using JS -->
+            <script>
+            function disableFriSun(input){
+                var day = new Date(input.value).getDay();
+                if(day == 0 || day == 5){ // 0 = Sunday, 5 = Friday
+                    alert("⚠ Clinic remains closed on Fridays & Sundays!");
+                    input.value = "";
+                } else {
+                    input.form.submit();
+                }
+            }
+            </script>
 
-            <label>Select Therapist</label>
-            <select name="therapist_id" required>
-                <?php foreach ($therapists as $t) { ?>
-                    <option value="<?php echo $t['therapist_id']; ?>">
-                        <?php echo $t['name']; ?>
-                    </option>
-                <?php } ?>
+            <label><strong>Select Date</strong></label>
+            <input class="form-input" type="date" name="date"
+                min="<?php echo date('Y-m-d'); ?>"
+                value="<?php echo $date; ?>"
+                onchange="disableFriSun(this)" required>
+
+            <label><strong>Select Time</strong></label>
+            <select class="form-input" name="time"
+                onchange="this.form.submit()" required>
+                <option disabled selected>Select Time</option>
+                <?php echo $timeOptions; ?>
             </select>
 
-            <button type="submit" name="book">Book Appointment</button>
+            <?php if ($showTherapists) { ?>
+                
+                <label><strong>Available Therapists</strong></label>
+                <select class="form-input" name="therapist" required>
+                <?php
+                $sql = "
+                SELECT t.therapist_id, u.name 
+                FROM therapist t 
+                JOIN user u ON t.therapist_id = u.id
+                WHERE t.therapist_id NOT IN (
+                    SELECT therapist_id FROM appointment
+                    WHERE date='$date' AND time='$time'
+                )";
+
+                $result = mysqli_query($conn, $sql);
+                if (mysqli_num_rows($result) == 0) {
+                    echo "<option disabled>No therapist available!</option>";
+                } else {
+                    while ($row = mysqli_fetch_assoc($result)) {
+                        echo "<option value='".$row['therapist_id']."'>".$row['name']."</option>";
+                    }
+                }
+                ?>
+                </select>
+
+                <button class="btn-submit" type="submit">Confirm Appointment</button>
+
+            <?php } ?>
+
         </form>
-    <?php } elseif (isset($_POST['check'])) { ?>
-        <p style="text-align:center;">No therapists available on this date.</p>
-    <?php } ?>
-
+    </div>
 </div>
-
-</body>
-</html>
+</div>

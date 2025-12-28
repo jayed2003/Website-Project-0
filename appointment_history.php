@@ -10,6 +10,7 @@ include("DBconnect.php");
 $patient_id = $_SESSION['user_id'];
 $user_name  = $_SESSION['user_name'];
 
+// Fetch appointment records
 $sql = "SELECT * FROM appointment 
         WHERE patient_id = $patient_id
         ORDER BY date DESC, time DESC";
@@ -64,16 +65,10 @@ $result = $conn->query($sql);
 
 <div class="wrapper">
 
-    
-    <div class="sidebar">
-        <h2>Patient Panel</h2>
-        <a href="appointment.php">Book Appointment</a>
-        <a href="appointment_history.php" class="active">Appointment History</a>
-        <a href="self_assessment.php">Self Assessment Test</a>
-        <a href="logout.php">Logout</a>
-    </div>
+    <!-- Sidebar -->
+    <?php include("patient_sidebar.php"); ?>
 
-    
+    <!-- Content -->
     <div class="content">
         <h1>Appointment History</h1>
         <p>Here are your appointment records, <?php echo $user_name; ?>.</p>
@@ -100,9 +95,66 @@ $result = $conn->query($sql);
                     </tr>
                 <?php } ?>
             </table>
+			<hr style="margin:40px 0;">
+
+			<h2 class="emergency-title">🚨 Emergency Appointments</h2>
+
+			<table class="appointment-table emergency-table">
+				<thead>
+					<tr>
+						<th>Date</th>
+						<th>Therapist</th>
+						<th>Status</th>
+					</tr>
+				</thead>
+				<tbody>
+
+			<?php
+			$emergencyStmt = $conn->prepare("
+				SELECT 
+					e.request_datetime,
+					u.name AS therapist_name,
+					e.status
+				FROM emergency_service_request e
+				JOIN therapist t ON e.therapist_id = t.therapist_id
+				JOIN user u ON t.therapist_id = u.id
+				WHERE e.patient_id = ?
+				ORDER BY e.request_datetime DESC
+			");
+
+			$emergencyStmt->bind_param("i", $patient_id);
+			$emergencyStmt->execute();
+			$emergencyResult = $emergencyStmt->get_result();
+
+			if ($emergencyResult->num_rows > 0) {
+				while ($row = $emergencyResult->fetch_assoc()) {
+
+					$date = date("M d, Y", strtotime($row['request_datetime']));
+					$status = ucfirst($row['status']);
+
+					echo "<tr>
+						<td>{$date}</td>
+						<td>{$row['therapist_name']}</td>
+						<td class='status {$row['status']}'>{$status}</td>
+					</tr>";
+				}
+			} else {
+				echo "<tr>
+						<td colspan='3'>No emergency requests found.</td>
+					</tr>";
+			}
+			?>
+
+				</tbody>
+			</table>
         <?php } else { ?>
             <p>No appointments found.</p>
         <?php } ?>
+		
+		
+		
+		
+
     </div>
 
 </div>
