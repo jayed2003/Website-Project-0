@@ -2,7 +2,7 @@
 include("DBconnect.php");
 session_start();
 
-/* Patient must be logged in */
+
 if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");
     exit();
