@@ -2,7 +2,6 @@
 include("DBconnect.php");
 session_start();
 
-/* Therapist must be logged in */
 if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");
     exit();
@@ -10,7 +9,6 @@ if (!isset($_SESSION['user_id'])) {
 
 $therapist_id = $_SESSION['user_id'];
 
-/* Handle form submission */
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $patient_id        = $_POST['patient_id'];
     $patient_name      = $_POST['patient_name'];
