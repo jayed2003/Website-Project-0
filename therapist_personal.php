@@ -2,7 +2,6 @@
 include("DBconnect.php");
 session_start();
 
-/* Patient must be logged in */
 if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");
     exit();
@@ -10,7 +9,6 @@ if (!isset($_SESSION['user_id'])) {
 
 $therapist_id = $_SESSION['user_id'];
 
-/* Fetch patient details from `user` table */
 $stmt = $conn->prepare("SELECT name, email, phone, gender, street, city, zipcode, date_time FROM user WHERE id = ?");
 $stmt->bind_param("i", $therapist_id);
 $stmt->execute();
