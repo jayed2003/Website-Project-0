@@ -1,0 +1,150 @@
+CREATE TABLE User (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100),
+    email VARCHAR(100),
+    password VARCHAR(255),
+    phone VARCHAR(20),
+    gender VARCHAR(20),
+    date_time date,
+    street VARCHAR(100),
+    city VARCHAR(50),
+    zipcode VARCHAR(10)
+) ENGINE=InnoDB;
+
+CREATE TABLE Patient (
+    id INT PRIMARY KEY,
+    FOREIGN KEY (id) REFERENCES User(id)
+        ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+CREATE TABLE Admin (
+    admin_id INT PRIMARY KEY,
+    designation VARCHAR(50),
+    FOREIGN KEY (admin_id) REFERENCES User(id)
+        ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+CREATE TABLE Therapist (
+    therapist_id INT PRIMARY KEY,
+    license_no VARCHAR(50),
+    consultation_fee DECIMAL(10,2),
+    availability_status VARCHAR(50),
+    FOREIGN KEY (therapist_id) REFERENCES User(id)
+        ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+CREATE TABLE Self_Assessment_Test (
+    name VARCHAR(100),
+    test_time TIME,
+    score INT,
+    date DATE,
+    severity VARCHAR(50),
+    patient_id INT,
+    PRIMARY KEY (patient_id, date),
+    FOREIGN KEY (patient_id) REFERENCES Patient(id)
+        ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+CREATE TABLE emergency_service_request (
+    request_id INT AUTO_INCREMENT PRIMARY KEY,
+
+    patient_id INT NOT NULL,
+    therapist_id INT NOT NULL,
+    admin_id INT NULL,
+
+    patient_name VARCHAR(100),
+    phone VARCHAR(20),
+    gender VARCHAR(10),
+
+    description TEXT,
+    location TEXT,
+
+    request_datetime DATETIME DEFAULT CURRENT_TIMESTAMP,
+    status ENUM('Pending','Approved','Cancelled') DEFAULT 'Pending',
+
+    FOREIGN KEY (patient_id) REFERENCES patient(id),
+    FOREIGN KEY (therapist_id) REFERENCES therapist(therapist_id),
+    FOREIGN KEY (admin_id) REFERENCES admin(admin_id)
+) ENGINE=InnoDB;
+
+
+CREATE TABLE Admin_Permissions (
+    admin_id INT,
+    permission VARCHAR(100),
+    PRIMARY KEY (admin_id, permission),
+    FOREIGN KEY (admin_id) REFERENCES Admin(admin_id)
+        ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+CREATE TABLE Appointment (
+    appointment_id INT AUTO_INCREMENT PRIMARY KEY,
+    date DATE,
+    time TIME,
+    status VARCHAR(50),
+    patient_name VARCHAR(100),
+    therapist_name VARCHAR(100),
+    patient_id INT,
+    therapist_id INT,
+    FOREIGN KEY (patient_id) REFERENCES Patient(id),
+    FOREIGN KEY (therapist_id) REFERENCES Therapist(therapist_id)
+) ENGINE=InnoDB;
+
+CREATE TABLE Progress_Report (
+    patient_name VARCHAR(100),
+    improvement_score INT,
+    severity VARCHAR(50),
+    date DATE,
+    summary TEXT,
+    patient_id INT,
+    therapist_id INT,
+    appointment_id INT,
+    PRIMARY KEY (patient_id, date),
+    FOREIGN KEY (patient_id) REFERENCES Patient(id),
+    FOREIGN KEY (therapist_id) REFERENCES Therapist(therapist_id),
+    FOREIGN KEY (appointment_id) REFERENCES Appointment(appointment_id)
+) ENGINE=InnoDB;
+
+CREATE TABLE Feedback (
+    patient_id INT,
+    therapist_id INT,
+    therapist_name VARCHAR(100),
+    comment TEXT,
+    rating INT,
+    PRIMARY KEY (patient_id, therapist_id),
+    FOREIGN KEY (patient_id) REFERENCES Patient(id),
+    FOREIGN KEY (therapist_id) REFERENCES Therapist(therapist_id)
+) ENGINE=InnoDB;
+
+CREATE TABLE Therapist_Degree (
+    therapist_id INT,
+    degree VARCHAR(100),
+    degree_year YEAR,
+    PRIMARY KEY (therapist_id, degree),
+    FOREIGN KEY (therapist_id) REFERENCES Therapist(therapist_id)
+        ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+CREATE TABLE Specialization (
+    therapist_id INT,
+    specialization VARCHAR(100),
+    PRIMARY KEY (therapist_id, specialization),
+    FOREIGN KEY (therapist_id) REFERENCES Therapist(therapist_id)
+        ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+CREATE TABLE Therapist_Notes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    therapist_id INT,
+    note_date DATE,
+    note TEXT
+);
+
+ALTER TABLE Therapist ADD profile_image VARCHAR(255);
+
+CREATE TABLE messages (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100),
+    email VARCHAR(100),
+    message TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
