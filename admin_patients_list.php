@@ -14,10 +14,13 @@ if (isset($_GET['delete_id'])) {
     $user_id = intval($_GET['delete_id']);
 
     // Delete related appointments first
-    $delete_appt = mysqli_query($conn, "DELETE FROM appointment WHERE patient_id = '$user_id'");
+     $delete_appt = mysqli_query($conn, "DELETE FROM appointment WHERE patient_id = '$user_id'");
 
-    // Delete user record
+    // Delete patient from user table
     $delete_user = mysqli_query($conn, "DELETE FROM user WHERE id = '$user_id'");
+
+    // Delete patient from patient table
+    $delete_patient = mysqli_query($conn, "DELETE FROM patient WHERE id = '$user_id'");
 
     if ($delete_user) {
         header("Location: admin_patients_list.php?msg=deleted");

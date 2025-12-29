@@ -10,7 +10,7 @@ if (!isset($_SESSION['user_id'])) {
 
 $therapist_id = $_SESSION['user_id'];
 
-/* ================= FETCH THERAPIST INFO ================= */
+/* FETCH THERAPIST INFO */
 $stmt = $conn->prepare("
     SELECT t.therapist_id, t.license_no, t.availability_status, t.profile_image, u.name
     FROM therapist t
@@ -21,7 +21,7 @@ $stmt->bind_param("i", $therapist_id);
 $stmt->execute();
 $therapist = $stmt->get_result()->fetch_assoc();
 
-/* ================= TOGGLE AVAILABILITY ================= */
+/*  TOGGLE AVAILABILITY  */
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['new_status'])) {
     $new_status = $_POST['new_status'];
 
@@ -36,7 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['new_status'])) {
 }
 
 
-/* ================= UPLOAD PROFILE IMAGE ================= */
+/*  UPLOAD PROFILE IMAGE  */
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['profile_image'])) {
     $targetDir = "uploads/";
     if (!is_dir($targetDir)) mkdir($targetDir);
@@ -56,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['profile_image'])) {
     exit();
 }
 
-/* ================= SAVE DEGREE & SPECIALIZATION ================= */
+/*  SAVE DEGREE & SPECIALIZATION */
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_professional'])) {
     $degree = trim($_POST['degree']);
     $specialization = trim($_POST['specialization']);
@@ -83,7 +83,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_professional']))
     exit();
 }
 
-/* ================= FETCH DEGREE & SPECIALIZATION ================= */
+/*  FETCH DEGREE & SPECIALIZATION  */
 $degRow = $conn->query(
     "SELECT degree FROM therapist_degree WHERE therapist_id = $therapist_id"
 )->fetch_assoc();
@@ -92,7 +92,7 @@ $specRow = $conn->query(
     "SELECT specialization FROM specialization WHERE therapist_id = $therapist_id"
 )->fetch_assoc();
 
-/* ================= CALENDAR SETUP ================= */
+/*  CALENDAR SETUP  */
 $today = date('j');
 $monthDays = cal_days_in_month(CAL_GREGORIAN, date('m'), date('Y'));
 $holidays = [5, 18, 25]; // example holidays
@@ -108,14 +108,14 @@ $holidays = [5, 18, 25]; // example holidays
 
 <div class="wrapper">
 
-    <!-- ================= SIDEBAR ================= -->
+    <!--  SIDEBAR  -->
     <?php include("therapist_sidebar.php"); ?>
 
-    <!-- ================= MAIN CONTENT ================= -->
+    <!-- MAIN CONTENT  -->
     <div class="main-content">
         <h1>Therapist Profile</h1>
 
-        <!-- ===== CALENDAR ===== -->
+        <!-- CALENDAR -->
         <div class="card">
             <h3>Calendar</h3>
             <div class="calendar-grid">
@@ -146,7 +146,7 @@ $holidays = [5, 18, 25]; // example holidays
 
         </div>
 
-        <!-- ===== PROFILE CARD ===== -->
+        <!-- PROFILE CARD -->
         <div class="card profile-card">
             <img class="profile-pic"
                  src="<?= $therapist['profile_image'] ?: 'assets/default.png' ?>">
@@ -164,7 +164,7 @@ $holidays = [5, 18, 25]; // example holidays
             </form>
         </div>
 
-        <!-- ===== PROFESSIONAL DETAILS ===== -->
+        <!-- PROFESSIONAL DETAILS -->
         <div class="card">
             <h3>Professional Details</h3>
             <form method="POST">
